@@ -1,0 +1,1296 @@
+﻿﻿<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>高中職小論文格式自我檢核輔助系統</title>
+  <meta name="description" content="提供高中職學生與教師進行小論文格式自我檢核之輔助工具（非評分、非合格認定）。" />
+  <meta name="theme-color" content="#0b2b52" />
+
+  <style>
+    :root{
+      --navy:#0b2b52;
+      --navy2:#0a3a6b;
+      --cyan:#18b6b6;
+      --cyan2:#3ce6d2;
+      --gold:#f8cc5c;
+
+      --bg:#f5f7fb;
+      --ink:#0f172a;
+      --muted:#64748b;
+
+      --danger:#b91c1c;
+
+      --shadow:0 18px 40px rgba(2, 12, 27, .10);
+      --shadow2:0 10px 22px rgba(2, 12, 27, .08);
+
+      --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans TC","PingFang TC",sans-serif;
+      --max:1040px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 520px at 12% 0%, rgba(24,182,182,.16), transparent 58%),
+        radial-gradient(820px 520px at 92% 8%, rgba(60,230,210,.14), transparent 60%),
+        radial-gradient(820px 520px at 50% 100%, rgba(248,204,92,.10), transparent 55%),
+        var(--bg);
+      color:var(--ink);
+      font-family:var(--font);
+      line-height:1.65;
+    }
+    a{ color:#2563eb; text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    .wrap{ max-width:var(--max); margin:0 auto; padding:18px 18px 46px; }
+
+    /* ---------- Top Bar ---------- */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+      padding:10px 0 14px;
+    }
+    .logo{
+      display:flex; align-items:center; gap:12px;
+      user-select:none;
+    }
+    .mark{
+      width:44px; height:44px;
+      border-radius:14px;
+      background:
+        radial-gradient(22px 22px at 30% 30%, rgba(248,204,92,.85), transparent 60%),
+        linear-gradient(135deg, var(--navy), var(--navy2));
+      box-shadow:0 14px 30px rgba(11,43,82,.22);
+      position:relative;
+      overflow:hidden;
+    }
+    .mark:after{
+      content:"";
+      position:absolute; inset:-40%;
+      background:linear-gradient(120deg, transparent 35%, rgba(255,255,255,.22) 50%, transparent 65%);
+      transform:rotate(8deg);
+      animation: shine 4.6s ease-in-out infinite;
+    }
+    @keyframes shine{
+      0%{ transform:translateX(-20%) rotate(8deg); opacity:.0; }
+      25%{ opacity:.55; }
+      60%{ opacity:.15; }
+      100%{ transform:translateX(30%) rotate(8deg); opacity:0; }
+    }
+    .titleBox{ display:flex; flex-direction:column; gap:2px; }
+    .siteTitle{
+      margin:0;
+      font-weight:900;
+      letter-spacing:.06em;
+      font-size:28px;
+      color:var(--navy);
+    }
+    .siteSub{
+      margin:0;
+      font-size:15px;
+      color:var(--muted);
+    }
+    @media (max-width:520px){
+      .siteTitle{ font-size:24px; }
+      .siteSub{ font-size:14px; }
+    }
+
+    /* ---------- Hero ---------- */
+    .hero{
+      border-radius:24px;
+      background:
+        linear-gradient(135deg, rgba(11,43,82,.92), rgba(10,58,107,.90)),
+        url("./assets/hero-bg.svg");
+      background-size: cover;
+      background-position: center;
+      box-shadow:0 22px 55px rgba(11,43,82,.22);
+      color:#fff;
+      overflow:hidden;
+      position:relative;
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .heroInner{
+      padding:18px 18px 18px;
+      display:grid;
+      grid-template-columns: 1fr; /* ✅ 改為單欄（0 干擾、更公部門） */
+      gap:14px;
+      align-items:stretch;
+    }
+    .heroCopy{ padding:8px 6px 10px; }
+
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.08);
+      font-weight:900;
+      letter-spacing:.04em;
+      font-size:12px;
+    }
+    .badge .spark{
+      width:10px; height:10px; border-radius:4px;
+      background:linear-gradient(135deg, var(--gold), #fff);
+      box-shadow:0 0 0 3px rgba(248,204,92,.14);
+    }
+    .heroTitle{
+      margin:10px 0 8px;
+      font-size:28px;
+      line-height:1.25;
+      font-weight:950;
+      letter-spacing:.02em;
+    }
+    .heroDesc{
+      margin:0 0 14px;
+      color:rgba(255,255,255,.88);
+      font-size:15px;
+    }
+
+    .ctaRow{
+      display:flex; gap:10px; flex-wrap:wrap;
+      align-items:center;
+      margin-top:12px;
+    }
+    .btn{
+      appearance:none; border:0; cursor:pointer;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:950;
+      font-size:16px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+      user-select:none;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btnPrimary{
+      color:#06213f;
+      background:linear-gradient(135deg, #ffffff, rgba(255,255,255,.88));
+      box-shadow:0 18px 30px rgba(0,0,0,.18);
+    }
+    .btnPrimary:hover{ filter:brightness(1.02); box-shadow:0 22px 40px rgba(0,0,0,.22); }
+    .btn[disabled],
+    .btn[aria-disabled="true"]{
+      opacity:.55;
+      cursor:not-allowed;
+      filter:saturate(.8);
+      pointer-events:none;
+    }
+
+    .aiEntryNote{
+      margin:10px 0 8px;
+      color:rgba(255,255,255,.88);
+      font-size:14px;
+      font-weight:700;
+    }
+    .ctaHint{
+      margin:8px 0 6px;
+      color:#ffffff;
+      font-weight:900;
+      font-size:16px;
+      letter-spacing:.01em;
+    }
+    .aiEntryRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .aiInfo{
+      margin:8px 0 0;
+      color:rgba(255,255,255,.72);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.01em;
+    }
+    .btnSoftGpt{
+      color:#0b2b52;
+      background:linear-gradient(135deg, #e8f7ef, #f6fdf9);
+      border:1px solid rgba(255,255,255,.45);
+      box-shadow:0 14px 26px rgba(0,0,0,.18);
+    }
+    .btnSoftGpt:hover{ filter:brightness(1.04); box-shadow:0 18px 34px rgba(0,0,0,.22); }
+    .btnSoftGem{
+      color:#0b2b52;
+      background:linear-gradient(135deg, #fff1e6, #fff8f2);
+      border:1px solid rgba(255,255,255,.45);
+      box-shadow:0 14px 26px rgba(0,0,0,.18);
+    }
+    .btnSoftGem:hover{ filter:brightness(1.04); box-shadow:0 18px 34px rgba(0,0,0,.22); }
+
+    .policyLinkWrap{
+      margin:10px 0 14px;
+      font-size:14px;
+      font-weight:800;
+      color:rgba(255,255,255,.88);
+    }
+
+    .policyLink{
+      color:#fff;
+      text-decoration:underline;
+      text-underline-offset:3px;
+    }
+
+    .policyLink:hover{
+      color:#f8cc5c;
+    }
+
+    /* ---------- Warning Strip ---------- */
+    .warnStrip{
+      margin-top:14px;
+      background:rgba(185,28,28,.06);
+      border:1px solid rgba(185,28,28,.18);
+      border-radius:18px;
+      padding:12px 14px;
+      box-shadow:var(--shadow2);
+    }
+    .warnTitle{
+      display:flex; align-items:center; gap:10px;
+      font-weight:950;
+      color:var(--danger);
+      margin:0 0 4px;
+      letter-spacing:.02em;
+      font-size:16px;
+    }
+    .warnBody{
+      margin:0;
+      color:#334155;
+      font-weight:800;
+      font-size:14px;
+      line-height:1.75;
+    }
+
+    /* ---------- Terms Section (直接展開、字大清楚) ---------- */
+    .termsSection{
+      margin-top:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.80);
+      border:1px solid rgba(226,232,240,.95);
+      box-shadow:var(--shadow);
+      padding:18px 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    .termsTitle{
+      margin:0;
+      font-weight:950;
+      letter-spacing:.02em;
+      font-size:22px;
+      color:var(--navy);
+    }
+
+    .termsHint{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .termsBody{
+      margin-top:10px;
+      color:#0f172a;
+      font-size:16px;
+      font-weight:650;
+      line-height:1.85;
+    }
+
+    .termsBody h3{
+      margin:14px 0 6px;
+      font-size:18px;
+      font-weight:950;
+    }
+
+    .termsBody ul{
+      margin:6px 0 12px 18px;
+      padding:0;
+    }
+    .termsBody li{ margin:6px 0; }
+
+    .termsBody .em{
+      color:var(--danger);
+      font-weight:950;
+    }
+   
+    .dangerText{
+      color:#b91c1c;
+      font-weight:900;
+    }
+
+    .finalReminder{
+      margin-top:18px;
+      text-align:center;
+      color:#b91c1c;
+      font-weight:950;
+      font-size:16px;
+    }
+
+    @media (max-width:520px){
+      .termsTitle{ font-size:20px; }
+      .termsBody{ font-size:15px; }
+      .termsBody h3{ font-size:17px; }
+    }
+
+    /* ---------- How-to Card（條款下方短卡片：0 彈窗、0 干擾） ---------- */
+    .howCard{
+      margin-top:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.80);
+      border:1px solid rgba(226,232,240,.95);
+      box-shadow:var(--shadow);
+      padding:18px 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    .howTitle{
+      margin:0;
+      font-weight:950;
+      letter-spacing:.02em;
+      font-size:22px;
+      color:var(--navy);
+    }
+    .howHint{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .howSteps{
+      list-style:none;
+      margin:12px 0 0;
+      padding:0;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .howStep{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(226,232,240,.95);
+      background:rgba(255,255,255,.65);
+    }
+
+    .howNum{
+      flex:0 0 auto;
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      font-weight:950;
+      color:#06213f;
+      background:linear-gradient(135deg, rgba(24,182,182,.22), rgba(60,230,210,.14), #fff);
+      border:1px solid rgba(24,182,182,.28);
+      box-shadow:0 10px 22px rgba(15, 23, 42, .08);
+    }
+
+    .howLine{
+      color:#0f172a;
+      font-size:16px;
+      font-weight:850;
+      line-height:1.65;
+    }
+    .howSub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .guideCard{
+  margin-top:18px;
+  border-radius:20px;
+  background:rgba(255,255,255,.88);
+  border:1px solid rgba(203,213,225,.9);
+  box-shadow:var(--shadow);
+  padding:22px;
+  text-align:center;
+}
+
+.guideCard h2{
+  margin:0 0 10px;
+  color:var(--navy);
+  font-size:26px;
+  font-weight:950;
+}
+
+.guideCard p{
+  margin:8px 0;
+  color:#334155;
+  font-size:16px;
+  line-height:1.8;
+  font-weight:700;
+}
+
+.guideBtn{
+  display:inline-block;
+  margin-top:14px;
+  padding:14px 22px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#0b2b52,#0a3a6b);
+  color:#fff;
+  font-weight:900;
+  text-decoration:none;
+  box-shadow:0 12px 26px rgba(11,43,82,.22);
+  transition:.2s ease;
+}
+
+.guideBtn:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.05);
+}
+
+ .guideCard{
+  margin-top:18px;
+  margin-bottom:24px;
+}
+
+.hero{
+  margin-top:18px;
+} 
+
+.btnSoftGem[disabled]{
+  background:linear-gradient(135deg,#e5e7eb,#f1f5f9);
+  color:#64748b;
+  box-shadow:none;
+  opacity:1;
+  cursor:not-allowed;
+}
+
+.btnSoftGem:not([disabled]){
+  background:linear-gradient(135deg,#fff1e6,#fff8f2);
+  color:#0b2b52;
+}
+
+  .promptBuilder{
+  margin-top:18px;
+  margin-bottom:24px;
+  border-radius:22px;
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(203,213,225,.9);
+  box-shadow:var(--shadow);
+  padding:22px;
+}
+
+.promptBuilder h2{
+  margin:0 0 10px;
+  color:var(--navy);
+  font-size:26px;
+  font-weight:950;
+  text-align:center;
+}
+
+.promptBuilder p{
+  margin:8px 0;
+  color:#334155;
+  font-size:16px;
+  font-weight:750;
+  line-height:1.8;
+  text-align:center;
+}
+
+.builderNote{
+  color:#b91c1c !important;
+  font-weight:950 !important;
+}
+
+.builderSubHint{
+  margin-top:6px;
+  color:#64748b;
+  font-size:14px;
+  font-weight:700;
+  text-align:center;
+  line-height:1.7;
+}
+
+.checkGrid{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.checkGrid label{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  padding:12px;
+  border-radius:14px;
+  background:#fff;
+  border:1px solid rgba(226,232,240,.95);
+  font-weight:850;
+  color:#0f172a;
+}
+
+.builderBtns{
+  margin-top:16px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.builderBtn{
+  border:0;
+  border-radius:16px;
+  padding:13px 18px;
+  background:linear-gradient(135deg,#0b2b52,#0a3a6b);
+  color:#fff;
+  font-weight:950;
+  cursor:pointer;
+  box-shadow:0 12px 26px rgba(11,43,82,.2);
+}
+
+.builderBtn.secondary{
+  background:#e5e7eb;
+  color:#334155;
+  box-shadow:none;
+}
+
+.promptOutput{
+  width:100%;
+  min-height:180px;
+  margin-top:16px;
+  padding:14px;
+  border-radius:16px;
+  border:1px solid rgba(203,213,225,.95);
+  background:#f8fafc;
+  color:#0f172a;
+  font-size:14px;
+  line-height:1.7;
+  resize:vertical;
+}
+
+@media (max-width:768px){
+  .checkGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+
+
+
+    @media (max-width:520px){
+      .howTitle{ font-size:20px; }
+      .howLine{ font-size:15px; }
+    }
+
+    /* ---------- Footer（收斂成官方密度） ---------- */
+    footer{
+      margin-top:16px;
+      color:#334155;
+      font-size:14px;
+    }
+    .footTop{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+      padding:12px 2px 6px;
+      border-top:1px solid rgba(226,232,240,.9);
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.85);
+      border:1px solid rgba(203,213,225,.9);
+      box-shadow:0 6px 16px rgba(15,23,42,.08);
+      font-weight:900;
+      font-size:13px;
+      color:#0f172a;
+    }
+
+
+     /* ===== footer 視覺收斂（官方底座） ===== */
+    footer{
+     margin-top:28px;
+     padding:26px 0 34px;
+     background: transparent;   /* ← 關鍵 */
+     border-top: none;
+     box-shadow: none;
+    }
+    
+    /* 未勾選：淺紅色提醒 */
+     .termsText span {
+      color: #e57373;              /* 淺紅 */
+      font-weight: 400;
+      transition: color 0.25s ease, font-weight 0.25s ease;
+    }
+
+    /* ✅ 勾選後：白色＋加粗（最清楚、不被藍底吃掉） */
+      #termsAgree:checked + span {
+      color: #ffffff;              /* 白色 */
+      font-weight: 600;            /* 加粗但不過重 */
+      text-shadow: 0 0 2px rgba(255,255,255,0.25);
+    }
+
+     .modeHint{
+      margin:8px 0 6px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+     .modeItem{
+      font-size:13px;
+      color:rgba(255,255,255,.85);
+      font-weight:700;
+      line-height:1.5;
+    }
+
+     /* ---------- Intro Banner ---------- */
+
+.introBanner{
+  margin-top:10px;
+  border-radius:24px;
+  background:
+    linear-gradient(135deg,
+    rgba(255,255,255,.92),
+    rgba(240,249,255,.92));
+  border:1px solid rgba(203,213,225,.8);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.introInner{
+  display:flex;
+  align-items:center;
+  gap:24px;
+  padding:28px;
+}
+
+.introImg{
+  width:220px;
+  max-width:42%;
+}
+
+.introText h2{
+  margin:0 0 10px;
+  color:var(--navy);
+  font-size:30px;
+  font-weight:950;
+}
+
+.introText p{
+  margin:6px 0;
+  font-size:17px;
+  color:#334155;
+  font-weight:700;
+  line-height:1.8;
+}
+
+.introHint{
+  color:#b91c1c !important;
+  font-weight:950 !important;
+  font-size:18px !important;
+}
+
+@media (max-width:768px){
+
+  .introInner{
+    flex-direction:column;
+    text-align:center;
+  }
+
+  .introImg{
+    width:180px;
+    max-width:80%;
+  }
+
+  .introText h2{
+    font-size:24px;
+  }
+
+  .introText p{
+    font-size:15px;
+  }
+
+}
+
+   /* ---------- 高精度細項檢查 ---------- */
+.precisionBuilder{
+  margin-top:18px;
+  margin-bottom:24px;
+  border-radius:22px;
+  background:rgba(255,255,255,.92);
+  border:1px solid rgba(203,213,225,.9);
+  box-shadow:var(--shadow);
+  padding:22px;
+}
+
+.precisionBuilder h2{
+  margin:0 0 10px;
+  color:var(--navy);
+  font-size:26px;
+  font-weight:950;
+  text-align:center;
+}
+
+.precisionBuilder p{
+  margin:8px 0;
+  color:#334155;
+  font-size:16px;
+  font-weight:750;
+  line-height:1.8;
+  text-align:center;
+}
+
+.precisionGrid{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.precisionCard{
+  border-radius:18px;
+  background:#fff;
+  border:1px solid rgba(226,232,240,.95);
+  padding:18px;
+  box-shadow:0 8px 18px rgba(15,23,42,.06);
+}
+
+.precisionCard h3{
+  margin:0 0 8px;
+  color:var(--navy);
+  font-size:20px;
+  font-weight:950;
+}
+
+.precisionCard p{
+  text-align:left;
+  font-size:15px;
+  color:#475569;
+}
+
+.precisionBtn{
+  margin-top:12px;
+  width:100%;
+  border:0;
+  border-radius:16px;
+  padding:13px 18px;
+  background:linear-gradient(135deg,#0b2b52,#0a3a6b);
+  color:#fff;
+  font-weight:950;
+  cursor:pointer;
+  box-shadow:0 12px 26px rgba(11,43,82,.2);
+}
+
+@media (max-width:768px){
+  .precisionGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+  
+  
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="logo" aria-label="網站識別">
+                
+        <div class="titleBox">
+          <h1 class="siteTitle">高中職小論文格式自我檢核輔助系統</h1>
+          <p class="siteSub">本系統所提供之檢核建議，係由 AI（GPT）依使用者上傳文件之可見內容進行格式輔助分析，僅供學習與自我檢核參考。</p>
+          <p class="siteSub">本網站為教學與學習用途之參考工具，非任何政府機關之官方網站，亦不代表承辦單位或評審立場。</p>
+
+        </div>
+      </div>
+    </div>
+
+      <!-- Intro Banner -->
+<section class="introBanner">
+
+  <div class="introInner">
+
+    <img src="./assets/study-cute.png"
+         alt="閱讀提醒"
+         class="introImg">
+
+    <div class="introText">
+      <h2>📘 開始小論文檢查前</h2>
+
+      <p>
+        請先詳閱本網站之使用說明、警語與注意事項內容。
+      </p>
+
+      <p>
+        「開始進入小論文檢查」按鈕位於本頁最下方。
+      </p>
+
+      <p class="introHint">
+        ⬇️ 請向下閱讀後再開始使用
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+
+      <!-- Hero -->
+
+    <!-- Responsibility / Warning -->
+    <section class="warnStrip" aria-label="重要說明">
+      <p class="warnTitle">⚠️ 重要說明（請務必閱讀）</p>
+      <p class="warnBody">
+        本系統僅提供格式檢核建議，<strong>不代表作品品質、研究水準或競賽評分結果</strong>。
+        檢核結果不得作為申訴、質疑或對抗評審老師評分之依據；評審結果以評審老師專業判定為準。
+      </p>
+      <p class="warnBody">
+        本系統所呈現之檢核結果與說明，係由 AI（GPT）依文件可見內容進行格式輔助分析，僅提供學習與自我檢核參考，並非判定、評分或合格認定之依據，亦不影響承辦單位與評審老師之最終認定與裁量。
+      </p>
+
+
+    </section>
+
+    <!-- Website Terms (直接展開顯示) -->
+    <section class="termsSection" aria-label="網站服務條款">
+      <div>
+        <h2 class="termsTitle">網站服務條款（請務必閱讀）</h2>
+        <p class="termsHint">本頁為公開入口之使用規範與責任切割說明；本系統檢核結果<strong class="em">不具評分或合格認定之效力</strong>，亦不代表作品品質、研究水準或競賽成績。</p>
+      </div>
+
+      <div class="termsBody">
+        <p>本系統僅提供 AI平台之入口導向，所有檢核內容皆為 AI 依文件可見內容產出之格式輔助參考，不具評分、合格認定或行政效力，且不影響承辦單位與評審老師之最終認定與裁量。</p>
+        <h3>一、工具定位與責任切割</h3>
+        <ul>
+          <li>本系統提供由 AI（GPT）執行之「小論文格式與結構」輔助檢核建議，協助學生與教師進行小論文作品檢查。</li>
+          <li>「一鍵前往格式檢核」係指快速進入 AI（GPT）輔助分析流程，並非官方審查或審核程序。</li>
+          <li>本系統檢核結果<strong class="em">不具評分或合格認定之效力</strong>，亦不代表作品品質、研究水準或競賽成績。</li>
+          <li>競賽評審結果以評審老師之專業判定為唯一依據。</li>
+          <li>本網站為教學與學習用途之參考工具，非任何政府機關之官方網站；其內容不構成任何形式之行政認定、評鑑或保證。</li>
+
+        </ul>
+
+        <h3>二、禁止不當引用</h3>
+        <li class="dangerText">
+              使用者不得以本系統檢核結果作為申訴、質疑或對抗評審老師評分之依據。
+        </li>
+
+        <li class="dangerText">
+              本系統結果不得作為要求更改成績、主張評審錯誤或任何爭議處理之證明文件。
+        </li>
+
+        <li class="dangerText">
+             本系統所呈現之任何顯示、說明或建議，均為 AI（GPT）依文件可見內容所產出之格式輔助參考資訊，不具任何評分、審查或認定效力，亦不影響承辦單位與評審老師之最終認定與裁量。
+        </li>
+
+        <h3>三、使用建議</h3>
+        <ul>
+          <li>建議於作品排版與內容已接近完成後再進行檢核，以提升檢核效益。</li>
+          <li>如需釐清規範細節，請以官方公告之格式規範文件為準。</li>
+          <li>小論文寫作旨在培養學生思辨及正確運用資料之能力，文章內容（含摘要、翻譯、改寫）不得以任何AI工具生成。</li>
+          <li>相關說明請到 "中學生網站" 下載 「全國高級中等學校小論文寫作比賽格式說明暨評審要點」。</li>
+        </ul>
+
+        <h3>四、隱私與資料處理（可依實際情況調整）</h3>
+        <ul>
+          <li>請勿上傳含有個資或敏感資訊之文件（例如：身分證字號、電話、住址等）。</li>
+          <li>系統所產生之檢核結果僅作為使用者自我修正參考。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- How to（短卡片：不使用 modal） -->
+    <section class="howCard" aria-label="3 步驟怎麼用">
+      <div>
+        <h2 class="howTitle">3 步驟怎麼用</h2>
+        <p class="howHint">不需登入、不需下載；準備好 PDF 後即可開始檢核。</p>
+      </div>
+
+      <ol class="howSteps">
+        <li class="howStep">
+          <div class="howNum">1</div>
+          <div>
+            <div class="howLine"><strong>準備 PDF：</strong>建議字型、行距、邊界等排版已接近完成。</div>
+            <div class="howSub">（越接近完成版，檢核建議越有效）</div>
+          </div>
+        </li>
+
+        <li class="howStep">
+          <div class="howNum">2</div>
+          <div>
+            <div class="howLine"><strong>前往檢核：</strong>點選上方「開始進行小論文格式檢核」，進入GPT工具並上傳 PDF。</div>
+            <div class="howSub">（若在手機操作，建議先確認檔案可正常上傳）</div>
+          </div>
+        </li>
+
+        <li class="howStep">
+          <div class="howNum">3</div>
+          <div>
+            <div class="howLine"><strong>依建議修正：</strong>依檢核結果逐項修正後，可再檢核確認。</div>
+            <div class="howSub">提醒：檢核結果為 AI（GPT）之格式輔助建議，僅供參考；評審結果以評審老師之專業判定為準。</div>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+         <p class="finalReminder">
+            ⚠️ 請確認已完整閱讀本頁注意事項後，再開始進入小論文格式檢查。
+         </p> 
+
+     
+       <section class="guideCard">
+            <h2>📘 看不懂 AI 檢核報告嗎？</h2>
+              <p>可依照報告中的第 1–18 項編號，快速查詢每一項代表的意思。</p>
+               <a class="guideBtn" id="goGuideBtn" href="./report-guide.html">
+                   🔍 進入 AI 檢核報告閱讀說明
+              </a>
+       </section>
+     
+     
+         <section class="hero" aria-label="主要入口">
+      <div class="heroInner">
+        <div class="heroCopy">
+          <div class="badge"><span class="spark"></span>請勾選我已閱讀並同意 網站服務條款，才可以 "一鍵前往格式檢核"</div>
+          <h2 class="heroTitle">一鍵前往格式檢核<br/>上傳 PDF 後立即產出檢核建議</h2>
+          <p class="heroDesc">
+            本系統提供，係由AI（GPT）依使用者上傳文件之「可見內容」所產出之格式輔助分析與檢核建議，僅供學習與自我檢查參考。
+            <strong>不具評分或認定合格之效力</strong>；競賽評審結果以評審老師專業判定為準。
+          </p>
+          <p class="heroDesc">
+            ⚠️ AI有時會出錯，如對檢核有疑義，請以小論文比賽計畫、評審要點及格式範例為最終判斷依據。
+          </p>
+          
+          <div class="ctaRow">
+            <label class="termsText">
+             <input id="termsAgree" type="checkbox" />
+             <span>
+                我已閱讀並同意網站服務條款，並理解本系統非評分、非合格認定，
+                且不得作為申訴或爭議依據。
+             </span>
+            </label>
+          </div>
+
+          <p class="aiEntryNote">本系統提供 AI（GPT）小論文格式輔助檢核入口，請詳閱上方使用說明後再開始使用。</p>
+           
+           
+          <p class="ctaHint">🚀 開始進行完整小論文格式檢核</p>
+          <p class="policyLinkWrap">
+                📘 
+             <a href="./usage-policy-v2.html" target="_blank" class="policyLink">
+                使用聲明與免責說明
+             </a>
+          </p>
+
+          <div class="aiEntryRow">
+            
+            <button class="btn btnSoftGem" id="goGemBtn" type="button">開始進入完整小論文檢查</button>
+
+          </div>
+          <div class="aiInfo">自檢累計使用次數：<span id="usageCount">—</span> ｜ 最後更新日期：<span id="lastUpdated">—</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="promptBuilder" aria-label="小論文細項檢查指令產生器">
+                 <h2>🧩 小論文細項檢查指令產生器</h2>
+                     <p>
+                        請勾選想加強檢查的「格式項目」，系統會自動產生 細項檢查指令。<br/>
+                        複製後貼到 GPT 使用及貼上小論文PDF，可針對特定格式細項進行補充檢查。
+                      </p>
+                      <p class="builderSubHint">
+                       建議先完成「完整格式檢查」後，
+                       再使用本功能進行補充細項檢查。
+                      </p>
+
+                      <p class="builderNote">
+                          ⚠️ 本功能僅限格式、引註、頁面、圖表來源等可觀察項目，不進行內容評分、研究品質判定或合格認定。
+                      </p>
+
+               <div class="checkGrid">
+                 <label><input type="checkbox" class="checkItem" value="全篇頁數與是否落在 4–10 頁範圍"> 全篇頁數</label>
+                 <label><input type="checkbox" class="checkItem" value="六大章節是否完整、順序是否正確"> 六大章節與順序</label>
+                 <label><input type="checkbox" class="checkItem" value="頁首篇名、頁尾頁碼是否逐頁存在且一致"> 頁首／頁尾</label>
+                 <label><input type="checkbox" class="checkItem" value="直接引文是否以引號標示，並檢查是否超過 50 字"> 引號字數</label>
+                 <label><input type="checkbox" class="checkItem" value="內文引註 C 與參考文獻 R 是否逐筆對應"> C/R 引註對應</label>
+                 <label><input type="checkbox" class="checkItem" value="引而未列 C−R：內文有引用但參考文獻未列"> 引而未列 C−R</label>
+                 <label><input type="checkbox" class="checkItem" value="列而未引 R−C：參考文獻有列但內文未引用"> 列而未引 R−C</label>
+                 <label><input type="checkbox" class="checkItem" value="引註格式是否符合作者與年代標示"> 引註格式</label>
+                 <label><input type="checkbox" class="checkItem" value="參考文獻是否至少 3 篇，且檢查來源類型"> 參考文獻數量與類型</label>
+                 <label><input type="checkbox" class="checkItem" value="圖表編號、標題、來源與是否列入參考文獻"> 圖表來源</label>
+                 <label><input type="checkbox" class="checkItem" value="是否有封面頁或不應出現的額外頁面"> 封面頁檢查</label>
+                 <label><input type="checkbox" class="checkItem" value="附錄是否出現足以辨識作者身分的資料"> 附錄個資風險</label>
+                </div>
+
+                <div class="builderBtns">
+                    <button class="builderBtn" type="button" id="buildPromptBtn">✨ 產生並複製 細項檢查指令</button>
+                    <button class="builderBtn secondary" type="button" id="clearPromptBtn">清除勾選</button>
+                </div>
+
+              
+         </section>
+       
+         <section class="precisionBuilder" aria-label="高精度細項檢查">
+                          <h2>🔬 高精度細項檢查</h2>
+                             <p>
+                               適用於需要更精密分析的格式項目。建議先完成「完整格式檢查」後，
+                               再使用本區產生專用指令。
+                            </p>
+                            <p class="builderNote">
+                              ⚠️ 本功能僅提供格式輔助檢查，不進行內容評分、研究品質判定或合格認定。
+                            </p>
+
+                    <div class="precisionGrid">
+                           <div class="precisionCard">
+                            <h3>📏 第 3 項｜引號 50 字精算</h3>
+                              <p>
+                               逐頁檢查「」與『』內的直接引文，排除標點符號後進行 Token 標號，
+                               協助確認是否超過 50 字。
+                              </p>
+                            <button class="precisionBtn" type="button" id="buildQuote50Btn">
+                              產生並複製｜引號 50 字精算指令
+                            </button>
+                       </div>
+
+                       <div class="precisionCard">
+                           <h3>📚 參考文獻格式檢查</h3>
+                            <p>
+                              逐筆檢查「陸、參考文獻」條目是否具備作者、年代、篇名、來源等可觀察格式元素。
+                            </p>
+                          <button class="precisionBtn" type="button" id="buildReferenceBtn">
+                            產生並複製｜參考文獻格式檢查指令
+                          </button>
+                       </div>
+                    </div>
+         </section>
+
+    <!-- Footer（只留官方密度） -->
+    <footer aria-label="頁尾資訊">
+      <div class="footTop">
+        <div class="tag">© <span id="yearNow"></span></div>
+        <div class="tag">版本：<span id="ver">v1.0.1</span></div>
+        <div class="tag">聯絡信箱：r91628120@ctvs.ptc.edu.tw</div>
+        
+        <div class="tag">網站建置與維護：小論文格式檢查設計團隊</div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+const CHECK_URL = "https://chatgpt.com/g/g-6981a04f211881919fef2b895ea253d2";
+
+document.getElementById("yearNow").textContent = new Date().getFullYear();
+
+const goGemBtn = document.getElementById("goGemBtn");
+const termsAgree = document.getElementById("termsAgree");
+
+goGemBtn.disabled = true;
+
+termsAgree.addEventListener("change", () => {
+  goGemBtn.disabled = !termsAgree.checked;
+});
+
+const COUNTER_API_BASE =
+  "https://script.google.com/macros/s/AKfycbztC-0hRazm7UDHv9xvIT-JtEDOGSS97dTn38gh0ze6VgHGHyT4NcUVUefV0RXau5-4lw/exec";
+
+function updateCounterDisplay(data) {
+  const today = new Date().toISOString().slice(0, 10);
+  document.getElementById("usageCount").textContent = data?.count ?? "—";
+
+  const dateOnly = data?.lastUpdated
+    ? data.lastUpdated.slice(0, 10)
+    : today;
+
+  document.getElementById("lastUpdated").textContent = dateOnly;
+}
+
+function readCounter() {
+  fetch(`${COUNTER_API_BASE}?action=read&t=${Date.now()}`, { cache: "no-store" })
+    .then((res) => res.json())
+    .then(updateCounterDisplay)
+    .catch(() => {
+      document.getElementById("usageCount").textContent = "—";
+      document.getElementById("lastUpdated").textContent = "—";
+    });
+}
+
+function makeRid() {
+  if (crypto && crypto.randomUUID) return crypto.randomUUID();
+  return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+}
+
+
+
+function incrementCounterAndRefresh() {
+
+  const rid = makeRid();
+
+  const incUrl =
+    `${COUNTER_API_BASE}?action=inc&rid=${encodeURIComponent(rid)}&t=${Date.now()}`;
+
+  fetch(incUrl, {
+    cache: "no-store",
+    keepalive: true
+  })
+    .then((res) => res.json())
+    .then(updateCounterDisplay)
+    .catch(() => {});
+}
+
+
+goGemBtn.onclick = () => {
+  if (!termsAgree.checked) return;
+  incrementCounterAndRefresh();
+  window.open(CHECK_URL, "_blank", "noopener,noreferrer");
+};
+
+const goGuideBtn = document.getElementById("goGuideBtn");
+
+goGuideBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  incrementCounterAndRefresh();
+
+  setTimeout(() => {
+    window.location.href = "./report-guide.html";
+  }, 250);
+});
+
+ const buildPromptBtn = document.getElementById("buildPromptBtn");
+const clearPromptBtn = document.getElementById("clearPromptBtn");
+
+
+buildPromptBtn.addEventListener("click", async () => {
+  const selected = Array.from(document.querySelectorAll(".checkItem:checked"))
+    .map(item => item.value);
+
+  if (selected.length === 0) {
+    alert("請至少勾選一個想檢查的項目。");
+    return;
+  }
+
+  const promptJson = {
+    mode: "高中職小論文格式細項補充檢查",
+    task: "請依我上傳的小論文 PDF 進行指定格式項目檢查",
+    selected_checks: selected,
+    analysis_scope: [
+      "僅依 PDF 可見內容檢查",
+      "僅列出可觀察事實",
+      "不得進行作品品質評分",
+      "不得判定合格或不合格",
+      "不得作為申訴、爭議或對抗評審之依據"
+    ],
+    output_request: [
+      "請依勾選項目逐項列出檢查結果",
+      "每一項請包含：觀察結果、出現頁碼或位置、需人工確認處",
+      "若資料不足，請標示：未提供或無法判讀",
+      "請使用學生看得懂的文字說明"
+    ],
+    reminder: "本指令僅用於格式輔助檢查，不進行研究內容評分或研究品質判定。"
+  };
+
+  const text = JSON.stringify(promptJson, null, 2);
+
+     try {
+           await navigator.clipboard.writeText(text);
+           incrementCounterAndRefresh();
+
+         alert("✅ 已複製細項檢查指令！\n請再按上方「開始進入小論文檢查」，貼到 GPT 使用。");
+
+  } catch (err) {
+         alert("已產生細項檢查指令，請手動複製內容。");
+  }
+});
+
+clearPromptBtn.addEventListener("click", () => {
+  document.querySelectorAll(".checkItem").forEach(item => item.checked = false);
+ 
+});
+
+  async function copyPrecisionPrompt(promptObj, successMessage) {
+  const text = JSON.stringify(promptObj, null, 2);
+
+  try {
+    await navigator.clipboard.writeText(text);
+    incrementCounterAndRefresh();
+    alert(successMessage);
+  } catch (err) {
+    alert("⚠️ 無法自動複製，請改用瀏覽器手動複製。");
+  }
+}
+
+const buildQuote50Btn = document.getElementById("buildQuote50Btn");
+const buildReferenceBtn = document.getElementById("buildReferenceBtn");
+
+buildQuote50Btn.addEventListener("click", () => {
+  const quotePrompt = {
+    mode: "高中職小論文高精度細項檢查｜第3項引號50字精算",
+    task: [
+      "請依我上傳的小論文 PDF，逐頁檢查所有直接引文。",
+      "僅擷取「」與『』內文字。",
+      "僅列出計算後 N ≥ 11 的引文。",
+      "括號及括號內文字不列入計算。",
+      "標點符號不列入計算。",
+      "中文每一字 = 1 Token。",
+      "英文、數字、英數混合連續字串 = 1 Token。",
+      "必須逐 Token 標號，例如：(1)詞 (2)詞。",
+      "最後標號 N 即為字數。",
+      "N > 50 時標示：⚠ 超過 50 字。",
+      "不得進行作品評分、合格判定或內容修改建議。"
+    ],
+    output_request: [
+      "請輸出表格：頁碼｜原始引文｜Token標號｜字數N｜是否超過50字",
+      "若無符合條件之引文，請標示：未發現 N ≥ 11 的直接引文。",
+      "若 PDF 文字無法判讀，請標示：無法判讀，需人工確認。"
+    ],
+    reminder: "本指令僅用於格式輔助檢查，不作為評分、申訴或爭議依據。"
+  };
+
+  copyPrecisionPrompt(
+    quotePrompt,
+    "✅ 已複製「引號 50 字精算指令」！\n請按上方「開始進入完整小論文檢查」，貼到 GPT 後再上傳 PDF。"
+  );
+});
+
+buildReferenceBtn.addEventListener("click", () => {
+  const referencePrompt = {
+    mode: "高中職小論文高精度細項檢查｜參考文獻格式檢查",
+    task: [
+      "請依我上傳的小論文 PDF，逐筆檢查『陸、參考文獻』段落。",
+      "僅依 PDF 可見內容分析。",
+      "不得自行補齊資料。",
+      "不得推測缺漏資訊。",
+      "逐筆列出每一條參考文獻。",
+      "檢查每筆是否可觀察到作者、年代、篇名、來源。",
+      "檢查格式順序是否疑似符合常見參考文獻格式。",
+      "若格式不完整，僅標示：格式疑似缺漏。",
+      "不得進行作品評分、合格判定或內容品質評價。"
+    ],
+    output_request: [
+      "請輸出表格：R編號｜頁碼｜完整原文｜可觀察格式元素｜疑似問題｜需人工確認處",
+      "若找不到參考文獻段落，請標示：未發現『陸、參考文獻』段落。",
+      "若條目無法清楚分辨，請標示：無法判讀，需人工確認。"
+    ],
+    reminder: "本指令僅用於參考文獻格式輔助檢查，不作為評分、申訴或爭議依據。"
+  };
+
+  copyPrecisionPrompt(
+    referencePrompt,
+    "✅ 已複製「參考文獻格式檢查指令」！\n請按上方「開始進入完整小論文檢查」，貼到 GPT 後再上傳 PDF。"
+  );
+});
+
+
+readCounter();
+</script>
+
+</body>
+</html>
