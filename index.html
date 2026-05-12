@@ -620,18 +620,37 @@
      box-shadow: none;
     }
     
-    /* 未勾選：淺紅色提醒 */
-     .termsText span {
-      color: #e57373;              /* 淺紅 */
-      font-weight: 400;
-      transition: color 0.25s ease, font-weight 0.25s ease;
+    /* 未勾選：淡黃色警示框＋亮紅文字 */
+    .termsText{
+      display:block;
+      width:100%;
     }
 
-    /* ✅ 勾選後：白色＋加粗（最清楚、不被藍底吃掉） */
-      #termsAgree:checked + span {
-      color: #ffffff;              /* 白色 */
-      font-weight: 600;            /* 加粗但不過重 */
-      text-shadow: 0 0 2px rgba(255,255,255,0.25);
+    .termsText span{
+      display:inline-block;
+      margin-left:6px;
+      padding:10px 14px;
+
+      background:#fff7cc;
+      border:1px solid #facc15;
+      border-radius:12px;
+
+      color:#dc2626;
+      font-weight:900;
+      line-height:1.7;
+
+      box-shadow:0 4px 12px rgba(250,204,21,.18);
+      transition:all .25s ease;
+    }
+
+     /* 勾選後：轉成白色提示狀態 */
+       #termsAgree:checked + span{
+       background:rgba(255,255,255,.14);
+       border:1px solid rgba(255,255,255,.25);
+       color:#ffffff;
+       font-weight:700;
+       box-shadow:none;
+       text-shadow:none;
     }
 
      .modeHint{
