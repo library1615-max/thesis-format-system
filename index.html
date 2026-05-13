@@ -736,6 +736,46 @@
 
 }
 
+    /* ---------- 投稿分類建議工具 ---------- */
+ .categoryBuilder{
+  margin-top:18px;
+  margin-bottom:24px;
+  border-radius:22px;
+  background:rgba(255,255,255,.92);
+  border:1px solid rgba(203,213,225,.9);
+  box-shadow:var(--shadow);
+  padding:22px;
+  text-align:center;
+ }
+
+ .categoryBuilder h2{
+  margin:0 0 10px;
+  color:var(--navy);
+  font-size:26px;
+  font-weight:950;
+ }
+
+ .categoryBuilder p{
+  margin:8px 0;
+  color:#334155;
+  font-size:16px;
+  font-weight:750;
+  line-height:1.8;
+ }
+
+ .categoryBtn{
+  margin-top:14px;
+  border:0;
+  border-radius:16px;
+  padding:13px 22px;
+  background:linear-gradient(135deg,#0b2b52,#0a3a6b);
+  color:#fff;
+  font-weight:950;
+  cursor:pointer;
+  box-shadow:0 12px 26px rgba(11,43,82,.2);
+ }
+
+
    /* ---------- 高精度細項檢查 ---------- */
 .precisionBuilder{
   margin-top:18px;
@@ -1027,6 +1067,24 @@
       </div>
     </section>
 
+    <section class="categoryBuilder" aria-label="小論文投稿分類建議工具">
+         <h2>🧭 小論文投稿分類建議工具</h2>
+            <p>
+               本功能可依學生小論文 PDF 中的「題目」與「文章內容」，
+               協助判斷較可能適合的投稿分類。請複製投稿分類建議指令
+               並貼到 GPT，然後再貼上小論文 PDF 內容，即可獲得投稿分類建議。  
+            </p>
+            <p class="builderNote">
+              ⚠️ 本功能僅提供投稿分類參考建議，不代表正式分類判定；最終仍應由學生與指導老師依作品內容決定。
+            </p>
+
+         <button class="categoryBtn" type="button" id="buildCategoryBtn">
+               產生並複製｜投稿分類建議指令
+         </button>
+    </section>
+
+
+
     <section class="promptBuilder" aria-label="小論文細項檢查指令產生器">
                  <h2>🧩 小論文細項檢查指令產生器</h2>
                      <p>
@@ -1191,8 +1249,43 @@ goGuideBtn.addEventListener("click", (e) => {
 });
 
  const buildPromptBtn = document.getElementById("buildPromptBtn");
-const clearPromptBtn = document.getElementById("clearPromptBtn");
+ const clearPromptBtn = document.getElementById("clearPromptBtn");
 
+ const buildCategoryBtn = document.getElementById("buildCategoryBtn");
+
+  buildCategoryBtn.addEventListener("click", async () => {
+  const categoryPrompt = {
+    mode: "高中職小論文投稿分類建議",
+    task: [
+      "請依我上傳的小論文 PDF，閱讀作品題目、摘要、前言、研究目的、研究方法與主要內容。",
+      "請協助判斷此篇小論文較可能適合投稿至哪一類。",
+      "投稿分類限以下21類：工程技術、化學、文學、史地、生物、地球科學、法政、物理、英文寫作、家事、海事水產、健康與護理、商業、國防、教育、資訊、農業、數學、藝術、體育、觀光餐旅。",
+      "不得判定作品優劣。",
+      "不得判定是否得獎。",
+      "不得進行內容評分。",
+      "若資料不足，請標示：需人工確認。"
+    ],
+    output_request: [
+      "請輸出：建議投稿分類第一順位",
+      "請輸出：第二可能分類",
+      "請輸出：第三可能分類",
+      "每一類請說明判斷依據",
+      "請列出作品題目與內容中支持分類判斷的關鍵詞",
+      "請提醒學生最終分類仍應由學生與指導老師確認"
+    ],
+    reminder: "本指令僅提供投稿分類參考建議，不具正式分類、評分或合格認定效力。"
+  };
+
+  const text = JSON.stringify(categoryPrompt, null, 2);
+
+  try {
+    await navigator.clipboard.writeText(text);
+    incrementCounterAndRefresh();
+    alert("✅ 已複製「投稿分類建議指令」！\n請貼到 GPT 後上傳小論文 PDF 使用。");
+  } catch (err) {
+    alert("⚠️ 無法自動複製，請改用瀏覽器手動複製。");
+  }
+});
 
 buildPromptBtn.addEventListener("click", async () => {
   const selected = Array.from(document.querySelectorAll(".checkItem:checked"))
