@@ -610,6 +610,27 @@
       color:#0f172a;
     }
 
+    .feedbackBtn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#fff7cc,#ffffff);
+  border:1px solid #facc15;
+  color:#0b2b52;
+  font-weight:950;
+  font-size:13px;
+  text-decoration:none;
+  box-shadow:0 6px 16px rgba(15,23,42,.08);
+}
+
+.feedbackBtn:hover{
+  text-decoration:none;
+  filter:brightness(1.03);
+}
+
+
 
      /* ===== footer 視覺收斂（官方底座） ===== */
     footer{
@@ -1005,15 +1026,6 @@
          </p> 
 
      
-       <section class="guideCard">
-            <h2>📘 看不懂 AI 檢核報告嗎？</h2>
-              <p>可依照報告中的第 1–18 項編號，快速查詢每一項代表的意思。</p>
-               <a class="guideBtn" id="goGuideBtn" href="./report-guide.html">
-                   🔍 進入 AI 檢核報告閱讀說明
-              </a>
-       </section>
-     
-     
          <section class="hero" aria-label="主要入口">
       <div class="heroInner">
         <div class="heroCopy">
@@ -1067,6 +1079,14 @@
       </div>
     </section>
 
+      <section class="guideCard">
+            <h2>📘 看不懂 AI 檢核報告嗎？</h2>
+              <p>可依照報告中的第 1–18 項編號，快速查詢每一項代表的意思。</p>
+               <a class="guideBtn" id="goGuideBtn" href="./report-guide.html">
+                   🔍 進入 AI 檢核報告閱讀說明
+              </a>
+       </section>
+     
     <section class="categoryBuilder" aria-label="小論文投稿分類建議工具">
          <h2>🧭 小論文投稿分類建議工具</h2>
             <p>
@@ -1165,6 +1185,15 @@
         <div class="tag">聯絡信箱：library1615@mail.chsh.ntct.edu.tw</div>
         
         <div class="tag">網站建置與維護：小論文格式檢查設計團隊</div>
+        
+         <a class="feedbackBtn"
+             href="https://forms.gle/gWAaB9hULbYbaPq58"
+             target="_blank"
+             rel="noopener noreferrer">
+             📝 使用回饋表單
+        </a>
+
+
       </div>
     </footer>
 
