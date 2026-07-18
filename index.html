@@ -947,6 +947,10 @@ content="https://library1615-max.github.io/thesis-format-system/assets/og-cover.
   box-shadow:0 8px 18px rgba(15,23,42,.06);
 }
 
+.precisionCard.wide{
+  grid-column:1 / -1;
+}
+
 .precisionCard h3{
   margin:0 0 8px;
   color:var(--navy);
@@ -1261,7 +1265,7 @@ content="https://library1615-max.github.io/thesis-format-system/assets/og-cover.
                             </p>
 
                     <div class="precisionGrid">
-                           <div class="precisionCard">
+                        <div class="precisionCard">
                             <h3>📏 第 3 項｜引號 50 字精算</h3>
                               <p>
                                逐頁檢查「」與『』內的直接引文，排除標點符號後進行 Token 標號，
@@ -1270,7 +1274,19 @@ content="https://library1615-max.github.io/thesis-format-system/assets/og-cover.
                             <button class="precisionBtn" type="button" id="buildQuote50Btn">
                               產生並複製｜引號 50 字精算指令
                             </button>
+                        </div>
+
+                       <div class="precisionCard wide">
+                           <h3>🖍️ 第 3 項加強｜正文粗體引號與 50 字檢查</h3>
+                            <p>
+                              逐頁找出正文段落中的粗體文字，檢查整段粗體是否由完整中文引號「……」包住，
+                              並確認引號內文字是否超過 50 字；「陸、參考文獻」及其後內容不列入檢查。
+                            </p>
+                          <button class="precisionBtn" type="button" id="buildBoldQuoteBtn">
+                            產生並複製｜正文粗體引號檢查指令
+                          </button>
                        </div>
+
 
                        <div class="precisionCard">
                            <h3>📚 參考文獻格式檢查</h3>
@@ -1281,6 +1297,8 @@ content="https://library1615-max.github.io/thesis-format-system/assets/og-cover.
                             產生並複製｜參考文獻格式檢查指令
                           </button>
                        </div>
+
+                       
                     </div>
          </section>
 
@@ -1484,6 +1502,7 @@ clearPromptBtn.addEventListener("click", () => {
 
 const buildQuote50Btn = document.getElementById("buildQuote50Btn");
 const buildReferenceBtn = document.getElementById("buildReferenceBtn");
+const buildBoldQuoteBtn = document.getElementById("buildBoldQuoteBtn");
 
 buildQuote50Btn.addEventListener("click", () => {
   const quotePrompt = {
@@ -1512,6 +1531,38 @@ buildQuote50Btn.addEventListener("click", () => {
   copyPrecisionPrompt(
     quotePrompt,
     "✅ 已複製「引號 50 字精算指令」！\n請按上方「開始進入完整小論文檢查」，貼到 GPT 後再上傳 PDF。"
+  );
+});
+
+buildBoldQuoteBtn.addEventListener("click", () => {
+  const boldQuotePrompt = {
+    mode: "高中職小論文高精度細項檢查｜第3項正文粗體完整引號與50字檢查",
+    task: [
+      "請依我已上傳的小論文 PDF，由正文第1頁起逐頁檢查；若尚未收到 PDF，請先提醒我上傳。",
+      "僅檢查正文段落中實際可見的粗體文字；章節或層級標題、頁首、頁尾、頁碼及其他非正文段落文字不列入。",
+      "檢查至『陸、參考文獻』標題之前為止；該標題、參考文獻各筆資料及其後所有內容一律排除。",
+      "必須依 PDF 實際可見的粗體排版辨識，不得因語意、重要性或疑似引用而推定為粗體。",
+      "每一處連續粗體文字視為1筆；同一段粗體因換行中斷時仍合併為同一筆。",
+      "逐筆檢查整段粗體文字前是否有左引號「、後是否有右引號」，且一對引號必須完整包住整段粗體，不能只包住部分詞語。",
+      "引號狀態只能標示：完整、未加引號、缺左引號、缺右引號、僅包住部分文字、需人工確認。",
+      "引號內全文移除空白、標點及引號符號後計算字元數；中文、英文與數字均計入；超過50字時提醒作者修正。",
+      "粗體文字全文必須完整顯示，不得摘要、改寫、截斷或使用省略號。",
+      "完成第一遍逐頁擷取後，必須再由前至後覆核一次，確認無跳頁、無漏列，且參考文獻未被計入。",
+      "禁止抽樣、估算、使用約數或以部分頁面推算全文。若某頁無法可靠辨識，標示『⚠需人工確認＋原因』，但須繼續完成其他頁面，不得停止或捏造數量。",
+      "本項僅呈現 PDF 可觀察的格式事實，不進行作品評分、合格判定或內容品質評價。"
+    ],
+    output_request: [
+      "輸出主表：序號｜正文頁碼｜粗體文字全文｜引號狀態｜引號內字數｜檢查結果。",
+      "主表後固定統計：正文粗體文字X處、符合完整引號X處、缺少完整引號X處、超過50字X處、參考文獻粗體不列入檢查。",
+      "未加、缺左、缺右或僅包住部分文字時，檢查結果標示『⚠請補上完整引號』；超過50字時另標示『⚠超過50字』。",
+      "若引號不完整者均未超過50字，最後顯示：⚠️ 發現正文中有X處粗體文字未使用完整引號（「……」）標示，請作者逐一補上。這X處文字均未超過50字。"
+    ],
+    reminder: "本指令僅用於正文粗體、完整引號及50字的格式輔助檢查，不作為評分、申訴或爭議依據。"
+  };
+
+  copyPrecisionPrompt(
+    boldQuotePrompt,
+    "✅ 已複製「正文粗體引號檢查指令」！\n若 PDF 已在目前對話中，直接貼上即可檢查；若尚未上傳，請貼上指令後再上傳 PDF。"
   );
 });
 
