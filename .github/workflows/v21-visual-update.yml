@@ -1,0 +1,148 @@
+name: Apply V2.1 visual hierarchy
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/v21-visual-update.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply-v21:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply V2.1 CSS overrides
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          marker = '/* ===== V2.1 VISUAL HIERARCHY ===== */'
+          if marker in text:
+              raise SystemExit('V2.1 already applied')
+
+          css = r'''
+
+/* ===== V2.1 VISUAL HIERARCHY =====
+   核心入口採深鼠尾草綠；主要操作按鈕採深橘色。
+   原有紅字、黃色底＋紅字警示語意完整保留。
+*/
+.hero{
+  background:
+    linear-gradient(135deg,rgba(58,94,80,.98),rgba(72,112,94,.97),rgba(82,122,104,.96)),
+    url('./assets/hero-bg.svg');
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 22px 48px rgba(52,82,70,.24);
+  color:#fffdf8;
+}
+.heroTitle,
+.ctaHint{color:#fffdf8;}
+.heroDesc,
+.aiEntryNote,
+.aiInfo,
+.policyLinkWrap,
+.modeItem{color:rgba(255,253,248,.88);}
+.badge{
+  color:#fffdf8;
+  border-color:rgba(255,255,255,.28);
+  background:rgba(255,255,255,.10);
+}
+.policyLink{color:#fff3df;}
+.policyLink:hover{color:#ffd1ad;}
+
+/* 主要操作按鈕：深橘色，與深綠核心入口形成清楚層級 */
+.btnPrimary,
+.guideBtn,
+.builderBtn,
+.categoryBtn,
+.precisionBtn{
+  background:linear-gradient(135deg,#c96f3d,#a95632);
+  color:#ffffff;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 12px 26px rgba(135,70,39,.24);
+}
+.btnPrimary:hover,
+.guideBtn:hover,
+.builderBtn:hover,
+.categoryBtn:hover,
+.precisionBtn:hover{
+  filter:brightness(1.05);
+  box-shadow:0 16px 30px rgba(135,70,39,.30);
+}
+
+/* 次要按鈕仍維持淡紫，避免所有操作搶同一層級 */
+.builderBtn.secondary{
+  background:#eee9f8;
+  color:#554d68;
+  border-color:rgba(185,174,216,.35);
+  box-shadow:none;
+}
+
+/* AI 平台入口也與主操作色系協調，但保留彼此辨識 */
+.btnSoftGpt{
+  color:#405f52;
+  background:linear-gradient(135deg,#edf7f1,#fffdf8);
+  border-color:rgba(255,255,255,.42);
+}
+.btnSoftGem,
+.btnSoftGem:not([disabled]){
+  color:#6d452f;
+  background:linear-gradient(135deg,#ffe6d6,#fff6ef);
+  border-color:rgba(201,111,61,.28);
+}
+
+/* 未啟用按鈕仍需清楚表示不可操作 */
+.btn[disabled],
+.btn[aria-disabled='true'],
+.btnSoftGem[disabled]{
+  background:linear-gradient(135deg,#e3e5e4,#f0f1ef);
+  color:#7a817d;
+  border-color:rgba(120,130,124,.18);
+  box-shadow:none;
+  opacity:1;
+}
+
+/* 警示色保護：不可被 V2.1 覆蓋 */
+.warnTitle,
+.termsBody .em,
+.dangerText,
+.finalReminder,
+.builderNote,
+.introHint{
+  color:#b91c1c!important;
+}
+.termsText span{
+  background:#fff7cc!important;
+  border-color:#facc15!important;
+  color:#dc2626!important;
+  box-shadow:0 4px 12px rgba(250,204,21,.18)!important;
+}
+#termsAgree:checked + span{
+  background:rgba(255,255,255,.14)!important;
+  border-color:rgba(255,255,255,.28)!important;
+  color:#ffffff!important;
+  box-shadow:none!important;
+}
+'''
+
+          text = text.replace('</style>', css + '\n  </style>', 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit V2.1 and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git rm .github/workflows/v21-visual-update.yml
+          git commit -m "Design: refine V2.1 visual hierarchy"
+          git push
