@@ -22,117 +22,13 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-
+          import base64
           path = Path('index.html')
           text = path.read_text(encoding='utf-8')
           marker = '/* ===== V2.1 VISUAL HIERARCHY ===== */'
           if marker in text:
               raise SystemExit('V2.1 already applied')
-
-          css = r'''
-
-/* ===== V2.1 VISUAL HIERARCHY =====
-   核心入口採深鼠尾草綠；主要操作按鈕採深橘色。
-   原有紅字、黃色底＋紅字警示語意完整保留。
-*/
-.hero{
-  background:
-    linear-gradient(135deg,rgba(58,94,80,.98),rgba(72,112,94,.97),rgba(82,122,104,.96)),
-    url('./assets/hero-bg.svg');
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:0 22px 48px rgba(52,82,70,.24);
-  color:#fffdf8;
-}
-.heroTitle,
-.ctaHint{color:#fffdf8;}
-.heroDesc,
-.aiEntryNote,
-.aiInfo,
-.policyLinkWrap,
-.modeItem{color:rgba(255,253,248,.88);}
-.badge{
-  color:#fffdf8;
-  border-color:rgba(255,255,255,.28);
-  background:rgba(255,255,255,.10);
-}
-.policyLink{color:#fff3df;}
-.policyLink:hover{color:#ffd1ad;}
-
-/* 主要操作按鈕：深橘色，與深綠核心入口形成清楚層級 */
-.btnPrimary,
-.guideBtn,
-.builderBtn,
-.categoryBtn,
-.precisionBtn{
-  background:linear-gradient(135deg,#c96f3d,#a95632);
-  color:#ffffff;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 12px 26px rgba(135,70,39,.24);
-}
-.btnPrimary:hover,
-.guideBtn:hover,
-.builderBtn:hover,
-.categoryBtn:hover,
-.precisionBtn:hover{
-  filter:brightness(1.05);
-  box-shadow:0 16px 30px rgba(135,70,39,.30);
-}
-
-/* 次要按鈕仍維持淡紫，避免所有操作搶同一層級 */
-.builderBtn.secondary{
-  background:#eee9f8;
-  color:#554d68;
-  border-color:rgba(185,174,216,.35);
-  box-shadow:none;
-}
-
-/* AI 平台入口也與主操作色系協調，但保留彼此辨識 */
-.btnSoftGpt{
-  color:#405f52;
-  background:linear-gradient(135deg,#edf7f1,#fffdf8);
-  border-color:rgba(255,255,255,.42);
-}
-.btnSoftGem,
-.btnSoftGem:not([disabled]){
-  color:#6d452f;
-  background:linear-gradient(135deg,#ffe6d6,#fff6ef);
-  border-color:rgba(201,111,61,.28);
-}
-
-/* 未啟用按鈕仍需清楚表示不可操作 */
-.btn[disabled],
-.btn[aria-disabled='true'],
-.btnSoftGem[disabled]{
-  background:linear-gradient(135deg,#e3e5e4,#f0f1ef);
-  color:#7a817d;
-  border-color:rgba(120,130,124,.18);
-  box-shadow:none;
-  opacity:1;
-}
-
-/* 警示色保護：不可被 V2.1 覆蓋 */
-.warnTitle,
-.termsBody .em,
-.dangerText,
-.finalReminder,
-.builderNote,
-.introHint{
-  color:#b91c1c!important;
-}
-.termsText span{
-  background:#fff7cc!important;
-  border-color:#facc15!important;
-  color:#dc2626!important;
-  box-shadow:0 4px 12px rgba(250,204,21,.18)!important;
-}
-#termsAgree:checked + span{
-  background:rgba(255,255,255,.14)!important;
-  border-color:rgba(255,255,255,.28)!important;
-  color:#ffffff!important;
-  box-shadow:none!important;
-}
-'''
-
+          css = base64.b64decode('Ci8qID09PT09IFYyLjEgVklTVUFMIEhJRVJBUkNIWSA9PT09PQogICDmoLjlv4PlhaXlj6PmjqHmt7HpvKDlsL7ojYnntqDvvJvkuLvopoHmk43kvZzmiInpkbXml7Hmq5joibLjgILkuK3mnKzntqHlrZcgLyByZWRpcmVjdCAqLwouaGVyb3sKICBiYWNrZ3JvdW5kOgogICAgbGluZWFyLWdyYWRpZW50KDEzNWRlZyxyZ2JhKDU4LDk0LDgwLC45OCkscmdiYSg3MiwxMTIsOTQsLjk3KSxyZ2JhKDgyLDEyMiwxMDQsLjk2KSksCiAgICB1cmwoJy4vYXNzZXRzL2hlcm8tYmcuc3ZnJyk7CiAgYm9yZGVyOjFweCBzb2xpZCByZ2JhKDI1NSwyNTUsMjU1LC4xNik7CiAgYm94LXNoYWRvdzowIDIycHggNDhweCByZ2JhKDUyLDgyLDcwLC4yNCk7CiAgY29sb3I6I2ZmZmRmODsKfQouaGVyb1RpdGxlLC5jdGFIaW50e2NvbG9yOiNmZmZkZjg7fQouaGVyb0Rlc2MsLmFpRW50cnlOb3RlLC5haUluZm8sLnBvbGljeUxpbmtXcmFwLC5tb2RlSXRlbXtjb2xvcjpyZ2JhKDI1NSwyNTMsMjQ4LC44OCk7fQouYmFkZ2V7Y29sb3I6I2ZmZmRmODtib3JkZXItY29sb3I6cmdiYSgyNTUsMjU1LDI1NSwuMjgpO2JhY2tncm91bmQ6cmdiYSgyNTUsMjU1LDI1NSwuMTApO30KLnBvbGljeUxpbmt7Y29sb3I6I2ZmZjNkZjt9Ci5wb2xpY3lMaW5rOmhvdmVye2NvbG9yOiNmZmQxYWQ7fQoKLmJ0blByaW1hcnksLmd1aWRlQnRuLC5idWlsZGVyQnRuLC5jYXRlZ29yeUJ0biwucHJlY2lzaW9uQnRuewogIGJhY2tncm91bmQ6bGluZWFyLWdyYWRpZW50KDEzNWRlZywjYzk2ZjNkLCNhOTU2MzIpOwogIGNvbG9yOiNmZmZmZmY7CiAgYm9yZGVyOjFweCBzb2xpZCByZ2JhKDI1NSwyNTUsMjU1LC4wOCk7CiAgYm94LXNoYWRvdzowIDEycHggMjZweCByZ2JhKDEzNSw3MCwzOSwuMjQpOwp9Ci5idG5QcmltYXJ5OmhvdmVyLC5ndWlkZUJ0bjpob3ZlciwuYnVpbGRlckJ0bjpob3ZlciwuY2F0ZWdvcnlCdG46aG92ZXIsLnByZWNpc2lvbkJ0bjpob3ZlcnsKICBmaWx0ZXI6YnJpZ2h0bmVzcygxLjA1KTsKICBib3gtc2hhZG93OjAgMTZweCAzMHB4IHJnYmEoMTM1LDcwLDM5LC4zMCk7Cn0KLmJ1aWxkZXJCdG4uc2Vjb25kYXJ5e2JhY2tncm91bmQ6I2VlZTlmODtjb2xvcjojNTU0ZDY4O2JvcmRlci1jb2xvcjpyZ2JhKDE4NSwxNzQsMjE2LC4zNSk7Ym94LXNoYWRvdzpub25lO30KLmJ0blNvZnRHcHR7Y29sb3I6IzQwNWY1MjtiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCgxMzVkZWcsI2VkZjdmMSwjZmZmZGY4KTtib3JkZXItY29sb3I6cmdiYSgyNTUsMjU1LDI1NSwuNDIpO30KLmJ0blNvZnRHZW0sLmJ0blNvZnRHZW06bm90KFtkaXNhYmxlZF0pe2NvbG9yOiM2ZDQ1MmY7YmFja2dyb3VuZDpsaW5lYXItZ3JhZGllbnQoMTM1ZGVnLCNmZmU2ZDYsI2ZmZjZlZik7Ym9yZGVyLWNvbG9yOnJnYmEoMjAxLDExMSw2MSwuMjgpO30KLmJ0bltkaXNhYmxlZF0sLmJ0blthcmlhLWRpc2FibGVkPSd0cnVlJ10sLmJ0blNvZnRHZW1bZGlzYWJsZWRdewoKICBiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCgxMzVkZWcsI2UzZTVlNCwjZjBmMWVmKTsKICBjb2xvcjojN2E4MTdkOwogIGJvcmRlci1jb2xvcjpyZ2JhKDEyMCwxMzAsMTI0LC4xOCk7CiAgYm94LXNoYWRvdzpub25lOwogIG9wYWNpdHk6MTsKfQoud2FyblRpdGxlLC50ZXJtc0JvZHkgLmVtLC5kYW5nZXJUZXh0LC5maW5hbFJlbWluZGVyLC5idWlsZGVyTm90ZSwuaW50cm9IaW50e2NvbG9yOiNiOTFjMWMhaW1wb3J0YW50O30KLnRlcm1zVGV4dCBzcGFue2JhY2tncm91bmQ6I2ZmZjdjYyFpbXBvcnRhbnQ7Ym9yZGVyLWNvbG9yOiNmYWNjMTUhaW1wb3J0YW50O2NvbG9yOiNkYzI2MjYhaW1wb3J0YW50O2JveC1zaGFkb3c6MCA0cHggMTJweCByZ2JhKDI1MCwyMDQsMjEsLjE4KSFpbXBvcnRhbnQ7fQojdGVybXNBZ3JlZTpjaGVja2VkICsgc3BhbntiYWNrZ3JvdW5kOnJnYmEoMjU1LDI1NSwyNTUsLjE0KSFpbXBvcnRhbnQ7Ym9yZGVyLWNvbG9yOnJnYmEoMjU1LDI1NSwyNTUsLjI4KSFpbXBvcnRhbnQ7Y29sb3I6I2ZmZmZmZiFpbXBvcnRhbnQ7Ym94LXNoYWRvdzpub25lIWltcG9ydGFudDt9Cg==').decode('utf-8')
           text = text.replace('</style>', css + '\n  </style>', 1)
           path.write_text(text, encoding='utf-8')
           PY
