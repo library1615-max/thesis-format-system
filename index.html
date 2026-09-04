@@ -18,7 +18,7 @@
 <link rel="icon" type="image/png" href="./assets/favicon.png" />
 <link rel="shortcut icon" href="./assets/favicon.ico" />
 <link rel="apple-touch-icon" href="./assets/favicon.png" />
-<meta name="theme-color" content="#0b2b52" />
+<meta name="theme-color" content="#fff9f0" />
 
 <!-- Open Graph / LINE / Facebook -->
 <meta property="og:type" content="website" />
@@ -938,6 +938,41 @@
 
   
   
+  
+/* ===== V2 PASTEL VISUAL THEME ===== */
+:root{
+  --navy:#48685b;--navy2:#6f927e;--cyan:#8fc5df;--cyan2:#badfeb;--gold:#f3aa7e;
+  --bg:#fff9f0;--ink:#35443d;--muted:#6d7b74;--danger:#b91c1c;
+  --shadow:0 16px 34px rgba(72,104,91,.10);--shadow2:0 8px 20px rgba(72,104,91,.08);
+}
+body{
+  background:radial-gradient(860px 480px at 8% 0%,rgba(143,197,223,.24),transparent 62%),radial-gradient(760px 460px at 94% 7%,rgba(185,174,216,.20),transparent 62%),radial-gradient(760px 480px at 18% 72%,rgba(127,165,141,.14),transparent 62%),radial-gradient(820px 500px at 82% 92%,rgba(243,170,126,.13),transparent 62%),var(--bg);
+  color:var(--ink);
+}
+a{color:#477f98}.siteTitle{color:#48685b}.siteSub{color:#718078}
+.mark{background:linear-gradient(135deg,#8fc5df,#7fa58d);box-shadow:0 12px 26px rgba(72,104,91,.16)}
+.introBanner{background:linear-gradient(135deg,rgba(255,254,251,.96),rgba(239,248,244,.96),rgba(242,246,252,.94));border-color:rgba(127,165,141,.24);box-shadow:0 16px 34px rgba(72,104,91,.08)}
+.introText h2{color:#48685b}.introText p{color:#4b5d54}
+.hero{background:linear-gradient(135deg,rgba(225,241,247,.96),rgba(232,242,235,.96),rgba(255,246,238,.96)),url('./assets/hero-bg.svg');border:1px solid rgba(127,165,141,.25);box-shadow:0 18px 42px rgba(72,104,91,.12);color:#35443d}
+.heroTitle,.ctaHint{color:#405f52}.heroDesc,.aiEntryNote,.aiInfo,.policyLinkWrap,.modeItem{color:#51665c}.policyLink{color:#477f98}
+.badge{color:#405f52;border-color:rgba(127,165,141,.28);background:rgba(255,255,255,.55)}
+.btnPrimary{color:#4b4038;background:linear-gradient(135deg,#ffd8bf,#f6b58f);box-shadow:0 12px 24px rgba(166,102,62,.15)}
+.btnSoftGpt{color:#405f52;background:linear-gradient(135deg,#e7f3ed,#fffefa);border-color:rgba(127,165,141,.28)}
+.btnSoftGem,.btnSoftGem:not([disabled]){color:#554d68;background:linear-gradient(135deg,#eee9f8,#fffaf3);border-color:rgba(185,174,216,.32)}
+.termsSection,.howCard,.guideCard,.promptBuilder,.categoryBuilder,.precisionBuilder{background:rgba(255,254,251,.90);border-color:rgba(127,165,141,.22);box-shadow:0 14px 30px rgba(72,104,91,.08)}
+.termsTitle,.howTitle,.guideCard h2,.promptBuilder h2,.categoryBuilder h2,.precisionBuilder h2,.precisionCard h3{color:#48685b}
+.howStep{background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(239,248,244,.68));border-color:rgba(127,165,141,.20)}
+.howNum{color:#405f52;background:linear-gradient(135deg,rgba(143,197,223,.34),rgba(127,165,141,.22),#fffaf3);border-color:rgba(127,165,141,.26)}
+.checkGrid label,.precisionCard{background:linear-gradient(145deg,#fffefa,#faf7ff);border-color:rgba(185,174,216,.24)}
+.guideBtn,.builderBtn,.categoryBtn,.precisionBtn{background:linear-gradient(135deg,#6f927e,#729db2);color:#fff;box-shadow:0 10px 22px rgba(72,104,91,.16)}
+.builderBtn.secondary{background:#eee9f8;color:#554d68;box-shadow:none}
+.tag{background:rgba(255,254,251,.88);border-color:rgba(127,165,141,.22);color:#405f52}
+footer{color:#65756d}
+/* 警示色保護：紅字與黃色底紅字不可被新主題覆蓋 */
+.warnTitle,.termsBody .em,.dangerText,.finalReminder,.builderNote,.introHint{color:#b91c1c!important}
+.termsText span{background:#fff7cc!important;border-color:#facc15!important;color:#dc2626!important;box-shadow:0 4px 12px rgba(250,204,21,.18)!important}
+#termsAgree:checked + span{background:#edf5f0!important;border-color:rgba(127,165,141,.36)!important;color:#405f52!important;box-shadow:none!important}
+
   </style>
 </head>
 
