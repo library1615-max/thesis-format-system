@@ -1,6 +1,4 @@
 User-agent: *
-
 Allow: /
 
-Sitemap:
-https://library1615-max.github.io/thesis-format-system/sitemap.xml
+Sitemap: https://library1615-max.github.io/thesis-format-system/sitemap.xml
