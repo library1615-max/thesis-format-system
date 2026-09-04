@@ -1368,62 +1368,102 @@ termsAgree.addEventListener("change", () => {
 
 const COUNTER_API_BASE =
   "https://script.google.com/macros/s/AKfycbxWJC2FBZvwX9FjiOUX5BFFuAb0aNwD3FoF9dp7ILzaIrsxYcNiKYeRKzgXQ2tHIUxG/exec";
+
+const COUNTER_CACHE_KEY = "thesisFormatCounterCacheV1";
+let counterIncrementInFlight = false;
+let goGemClickLocked = false;
+
 function updateCounterDisplay(data) {
-  const today = new Date().toISOString().slice(0, 10);
-  document.getElementById("usageCount").textContent = data?.count ?? "—";
+  if (data?.count !== undefined && data?.count !== null) {
+    document.getElementById("usageCount").textContent = data.count;
+  }
+  if (data?.lastUpdated) {
+    document.getElementById("lastUpdated").textContent = data.lastUpdated.slice(0, 10);
+  }
+}
 
-  const dateOnly = data?.lastUpdated
-    ? data.lastUpdated.slice(0, 10)
-    : today;
+function saveCounterCache(data) {
+  if (data?.count === undefined || data?.count === null) return;
+  try {
+    localStorage.setItem(COUNTER_CACHE_KEY, JSON.stringify({
+      count: data.count,
+      lastUpdated: data.lastUpdated || "",
+      savedAt: Date.now()
+    }));
+  } catch (e) {}
+}
 
-  document.getElementById("lastUpdated").textContent = dateOnly;
+function loadCounterCache() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(COUNTER_CACHE_KEY) || "null");
+    if (!cached || cached.count === undefined || cached.count === null) return false;
+    updateCounterDisplay(cached);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 function readCounter() {
+  const hasCache = loadCounterCache();
   fetch(`${COUNTER_API_BASE}?action=read&t=${Date.now()}`, { cache: "no-store" })
-    .then((res) => res.json())
-    .then(updateCounterDisplay)
+    .then((res) => {
+      if (!res.ok) throw new Error(`Counter read failed: ${res.status}`);
+      return res.json();
+    })
+    .then((data) => {
+      updateCounterDisplay(data);
+      saveCounterCache(data);
+    })
     .catch(() => {
-      document.getElementById("usageCount").textContent = "—";
-      document.getElementById("lastUpdated").textContent = "—";
+      if (!hasCache) {
+        document.getElementById("usageCount").textContent = "—";
+        document.getElementById("lastUpdated").textContent = "—";
+      }
     });
 }
 
 function makeRid() {
-  if (crypto && crypto.randomUUID) return crypto.randomUUID();
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
 }
 
-
-
 function incrementCounterAndRefresh() {
-
+  if (counterIncrementInFlight) return Promise.resolve(false);
+  counterIncrementInFlight = true;
   const rid = makeRid();
-
-  const incUrl =
-    `${COUNTER_API_BASE}?action=inc&rid=${encodeURIComponent(rid)}&t=${Date.now()}`;
-
-  fetch(incUrl, {
-    cache: "no-store",
-    keepalive: true
-  })
-    .then((res) => res.json())
-    .then(updateCounterDisplay)
-    .catch(() => {});
+  const incUrl = `${COUNTER_API_BASE}?action=inc&rid=${encodeURIComponent(rid)}&t=${Date.now()}`;
+  return fetch(incUrl, { cache: "no-store", keepalive: true })
+    .then((res) => {
+      if (!res.ok) throw new Error(`Counter increment failed: ${res.status}`);
+      return res.json();
+    })
+    .then((data) => {
+      updateCounterDisplay(data);
+      saveCounterCache(data);
+      return true;
+    })
+    .catch(() => false)
+    .finally(() => {
+      counterIncrementInFlight = false;
+    });
 }
 
 
 goGemBtn.onclick = () => {
-  if (!termsAgree.checked) return;
+  if (!termsAgree.checked || goGemClickLocked) return;
+  goGemClickLocked = true;
   incrementCounterAndRefresh();
   window.open(CHECK_URL, "_blank", "noopener,noreferrer");
+  setTimeout(() => {
+    goGemClickLocked = false;
+  }, 1500);
 };
 
 const goGuideBtn = document.getElementById("goGuideBtn");
 
 goGuideBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  incrementCounterAndRefresh();
 
   setTimeout(() => {
     window.location.href = "./report-guide.html";
@@ -1462,7 +1502,6 @@ goGuideBtn.addEventListener("click", (e) => {
 
   try {
     await navigator.clipboard.writeText(text);
-    incrementCounterAndRefresh();
     alert("✅ 已複製「投稿分類建議指令」！\n請貼到 GPT 後上傳小論文 PDF 使用。");
   } catch (err) {
     alert("⚠️ 無法自動複製，請改用瀏覽器手動複製。");
@@ -1502,7 +1541,6 @@ buildPromptBtn.addEventListener("click", async () => {
 
      try {
            await navigator.clipboard.writeText(text);
-           incrementCounterAndRefresh();
 
          alert("✅ 已複製細項檢查指令！\n請再按上方「開始進入小論文檢查」，貼到 GPT 使用。");
 
@@ -1521,7 +1559,6 @@ clearPromptBtn.addEventListener("click", () => {
 
   try {
     await navigator.clipboard.writeText(text);
-    incrementCounterAndRefresh();
     alert(successMessage);
   } catch (err) {
     alert("⚠️ 無法自動複製，請改用瀏覽器手動複製。");
