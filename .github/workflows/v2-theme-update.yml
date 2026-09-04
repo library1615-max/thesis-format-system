@@ -1,0 +1,242 @@
+name: Apply V2 pastel theme
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/v2-theme-update.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply-theme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply visual-only CSS overrides
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          marker = '/* ===== V2 PASTEL VISUAL THEME ===== */'
+          if marker in text:
+              raise SystemExit('V2 theme already present; no duplicate changes applied.')
+
+          theme = r'''
+
+    /* ===== V2 PASTEL VISUAL THEME =====
+       視覺改版原則：僅調整網站介面色彩與層次；
+       原有紅字、黃色底＋紅字等學生警示語意完整保留。
+    */
+    :root{
+      --navy:#48685b;
+      --navy2:#6f927e;
+      --cyan:#8fc5df;
+      --cyan2:#badfeb;
+      --gold:#f3aa7e;
+      --bg:#fff9f0;
+      --ink:#35443d;
+      --muted:#6d7b74;
+      --danger:#b91c1c;
+      --shadow:0 16px 34px rgba(72,104,91,.10);
+      --shadow2:0 8px 20px rgba(72,104,91,.08);
+    }
+
+    body{
+      background:
+        radial-gradient(860px 480px at 8% 0%, rgba(143,197,223,.24), transparent 62%),
+        radial-gradient(760px 460px at 94% 7%, rgba(185,174,216,.20), transparent 62%),
+        radial-gradient(760px 480px at 18% 72%, rgba(127,165,141,.14), transparent 62%),
+        radial-gradient(820px 500px at 82% 92%, rgba(243,170,126,.13), transparent 62%),
+        var(--bg);
+      color:var(--ink);
+    }
+
+    a{ color:#477f98; }
+
+    .mark{
+      background:
+        radial-gradient(22px 22px at 30% 30%, rgba(255,249,240,.9), transparent 62%),
+        linear-gradient(135deg, #8fc5df, #7fa58d);
+      box-shadow:0 12px 26px rgba(72,104,91,.16);
+    }
+
+    .siteTitle{ color:#48685b; }
+    .siteSub{ color:#718078; }
+
+    .introBanner{
+      background:linear-gradient(135deg, rgba(255,254,251,.96), rgba(239,248,244,.96), rgba(242,246,252,.94));
+      border-color:rgba(127,165,141,.24);
+      box-shadow:0 16px 34px rgba(72,104,91,.08);
+    }
+    .introText h2{ color:#48685b; }
+    .introText p{ color:#4b5d54; }
+
+    .hero{
+      background:
+        linear-gradient(135deg, rgba(225,241,247,.96), rgba(232,242,235,.96), rgba(255,246,238,.96)),
+        url("./assets/hero-bg.svg");
+      border:1px solid rgba(127,165,141,.25);
+      box-shadow:0 18px 42px rgba(72,104,91,.12);
+      color:#35443d;
+    }
+    .heroTitle{ color:#405f52; }
+    .heroDesc,
+    .aiEntryNote,
+    .aiInfo,
+    .policyLinkWrap,
+    .modeItem{ color:#51665c; }
+    .ctaHint{ color:#405f52; }
+    .badge{
+      color:#405f52;
+      border-color:rgba(127,165,141,.28);
+      background:rgba(255,255,255,.55);
+    }
+    .badge .spark{
+      background:linear-gradient(135deg,#f3aa7e,#fff1d7);
+      box-shadow:0 0 0 3px rgba(243,170,126,.16);
+    }
+    .policyLink{ color:#477f98; }
+    .policyLink:hover{ color:#a45d39; }
+
+    .btnPrimary{
+      color:#4b4038;
+      background:linear-gradient(135deg,#ffd8bf,#f6b58f);
+      box-shadow:0 12px 24px rgba(166,102,62,.15);
+    }
+    .btnPrimary:hover{ box-shadow:0 16px 28px rgba(166,102,62,.20); }
+    .btnSoftGpt{
+      color:#405f52;
+      background:linear-gradient(135deg,#e7f3ed,#fffefa);
+      border-color:rgba(127,165,141,.28);
+      box-shadow:0 10px 22px rgba(72,104,91,.10);
+    }
+    .btnSoftGem,
+    .btnSoftGem:not([disabled]){
+      color:#554d68;
+      background:linear-gradient(135deg,#eee9f8,#fffaf3);
+      border-color:rgba(185,174,216,.32);
+      box-shadow:0 10px 22px rgba(102,88,132,.10);
+    }
+
+    .termsSection,
+    .howCard,
+    .guideCard,
+    .promptBuilder,
+    .categoryBuilder,
+    .precisionBuilder{
+      background:rgba(255,254,251,.90);
+      border-color:rgba(127,165,141,.22);
+      box-shadow:0 14px 30px rgba(72,104,91,.08);
+    }
+
+    .termsTitle,
+    .howTitle,
+    .guideCard h2,
+    .promptBuilder h2,
+    .categoryBuilder h2,
+    .precisionBuilder h2,
+    .precisionCard h3{
+      color:#48685b;
+    }
+
+    .termsBody,
+    .howLine,
+    .checkGrid label{ color:#35443d; }
+    .guideCard p,
+    .promptBuilder p,
+    .categoryBuilder p,
+    .precisionBuilder p,
+    .precisionCard p{ color:#53655c; }
+
+    .howStep{
+      background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(239,248,244,.68));
+      border-color:rgba(127,165,141,.20);
+    }
+    .howNum{
+      color:#405f52;
+      background:linear-gradient(135deg,rgba(143,197,223,.34),rgba(127,165,141,.22),#fffaf3);
+      border-color:rgba(127,165,141,.26);
+      box-shadow:0 8px 18px rgba(72,104,91,.08);
+    }
+
+    .checkGrid label,
+    .precisionCard{
+      background:linear-gradient(145deg,#fffefa,#faf7ff);
+      border-color:rgba(185,174,216,.24);
+      box-shadow:0 7px 16px rgba(72,104,91,.05);
+    }
+    .promptOutput{
+      background:#fffefa;
+      border-color:rgba(143,197,223,.34);
+      color:#35443d;
+    }
+
+    .guideBtn,
+    .builderBtn,
+    .categoryBtn,
+    .precisionBtn{
+      background:linear-gradient(135deg,#6f927e,#729db2);
+      color:#fff;
+      box-shadow:0 10px 22px rgba(72,104,91,.16);
+    }
+    .builderBtn.secondary{
+      background:#eee9f8;
+      color:#554d68;
+      box-shadow:none;
+    }
+
+    .tag{
+      background:rgba(255,254,251,.88);
+      border-color:rgba(127,165,141,.22);
+      color:#405f52;
+      box-shadow:0 5px 14px rgba(72,104,91,.06);
+    }
+    .footTop{ border-top-color:rgba(127,165,141,.22); }
+    footer{ color:#65756d; }
+
+    /* 警示色保護：以下規則刻意放在 V2 最後，避免主題色覆蓋教學警示 */
+    .warnTitle,
+    .termsBody .em,
+    .dangerText,
+    .finalReminder,
+    .builderNote,
+    .introHint{
+      color:#b91c1c !important;
+    }
+    .termsText span{
+      background:#fff7cc !important;
+      border-color:#facc15 !important;
+      color:#dc2626 !important;
+      box-shadow:0 4px 12px rgba(250,204,21,.18) !important;
+    }
+    #termsAgree:checked + span{
+      background:#edf5f0 !important;
+      border-color:rgba(127,165,141,.36) !important;
+      color:#405f52 !important;
+      box-shadow:none !important;
+    }
+'''
+
+          text = text.replace('</style>', theme + '\n  </style>', 1)
+          text = text.replace('<meta name="theme-color" content="#0b2b52" />', '<meta name="theme-color" content="#fff9f0" />', 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit visual update and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git rm .github/workflows/v2-theme-update.yml
+          git commit -m "Design: refresh site with pastel V2 theme"
+          git push
