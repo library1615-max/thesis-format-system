@@ -1,0 +1,116 @@
+name: SEO index one-time patch
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch-index-seo:
+    if: github.event.head_commit.message != 'SEO: optimize index metadata'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Replace only index.html SEO head metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8-sig')
+          style_pos = text.find('<style>')
+          if style_pos == -1:
+              style_pos = text.find(' <style>')
+          if style_pos == -1:
+              raise SystemExit('Could not locate <style> in index.html')
+
+          seo_head = '''<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>高中職小論文格式自我檢核輔助系統｜小論文格式檢查・AI 自我檢核</title>
+
+<meta name="google-site-verification" content="b_7tV5iOYG5H-5XSXshHIwJ2CBXEb8DKHFG2z4_NA3Q" />
+
+<!-- SEO -->
+<meta name="description" content="高中職小論文格式自我檢核輔助系統，提供高中職學生與教師進行小論文格式檢查、內文引註、參考文獻、圖表來源與投稿分類等 AI 輔助自我檢核。" />
+<meta name="keywords" content="高中職小論文,高中職小論文格式檢核,高中職小論文自我檢核,小論文格式檢查,小論文格式檢核,小論文自我檢核,高中小論文,高職小論文,中學生小論文,小論文引註,小論文參考文獻,AI小論文檢核" />
+<meta name="author" content="高中職小論文格式檢查設計團隊" />
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+<meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+<link rel="canonical" href="https://library1615-max.github.io/thesis-format-system/" />
+
+<link rel="icon" type="image/png" href="./assets/favicon.png" />
+<link rel="shortcut icon" href="./assets/favicon.ico" />
+<link rel="apple-touch-icon" href="./assets/favicon.png" />
+<meta name="theme-color" content="#0b2b52" />
+
+<!-- Open Graph / LINE / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:site_name" content="高中職小論文格式自我檢核輔助系統" />
+<meta property="og:title" content="高中職小論文格式自我檢核輔助系統｜小論文格式檢查" />
+<meta property="og:description" content="提供高中職學生與教師進行小論文格式、內文引註、參考文獻與圖表來源等 AI 輔助自我檢核。" />
+<meta property="og:url" content="https://library1615-max.github.io/thesis-format-system/" />
+<meta property="og:image" content="https://library1615-max.github.io/thesis-format-system/assets/og-cover.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="高中職小論文格式自我檢核輔助系統" />
+
+<!-- X / Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="高中職小論文格式自我檢核輔助系統｜小論文格式檢查" />
+<meta name="twitter:description" content="高中職小論文格式檢查與 AI 自我檢核輔助工具。" />
+<meta name="twitter:image" content="https://library1615-max.github.io/thesis-format-system/assets/og-cover.png" />
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://library1615-max.github.io/thesis-format-system/#website",
+      "url": "https://library1615-max.github.io/thesis-format-system/",
+      "name": "高中職小論文格式自我檢核輔助系統",
+      "alternateName": ["高中職小論文自我檢核", "小論文格式檢查", "小論文格式檢核"],
+      "description": "提供高中職學生與教師進行小論文格式檢查與 AI 輔助自我檢核。",
+      "inLanguage": "zh-TW"
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://library1615-max.github.io/thesis-format-system/#application",
+      "name": "高中職小論文格式自我檢核輔助系統",
+      "url": "https://library1615-max.github.io/thesis-format-system/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "isAccessibleForFree": true,
+      "inLanguage": "zh-TW",
+      "description": "高中職小論文格式檢查、內文引註、參考文獻、圖表來源與投稿分類之 AI 輔助自我檢核入口。"
+    }
+  ]
+}
+</script>
+
+'''
+
+          path.write_text(seo_head + text[style_pos:], encoding='utf-8')
+          PY
+
+      - name: Commit index SEO update
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No index.html change needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "SEO: optimize index metadata"
+          git push
